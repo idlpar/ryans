@@ -126,4 +126,136 @@ document.addEventListener("DOMContentLoaded", function () {
         const searchBox = document.getElementById('mobile-search-box');
         searchBox.classList.toggle('hidden');
     });
+
+    // Cart Sidebar
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const openCartButton = document.querySelector('[aria-label="Cart"]');
+    const closeCartButton = document.getElementById('close-cart-sidebar');
+
+    openCartButton.addEventListener('click', () => {
+        cartSidebar.classList.remove('translate-x-full');
+    });
+
+    closeCartButton.addEventListener('click', () => {
+        cartSidebar.classList.add('translate-x-full');
+    });
+
+    // Toggle User Dropdown
+    document.getElementById('user-menu-button').addEventListener('click', function () {
+        const dropdown = document.getElementById('user-dropdown');
+        dropdown.classList.toggle('hidden');
+    });
+
+    // Mobile Menu Functionality
+    const mobileMenu = document.getElementById("mobile-menu");
+    const openMenuBtn = document.getElementById("open-mobile-menu");
+    const closeMenuBtn = document.getElementById("close-menu");
+    const mobileMenuList = document.getElementById("mobile-menu-list");
+    const desktopMenu = document.getElementById("desktop-menu");
+
+    // Clone desktop menu into mobile menu
+    mobileMenuList.innerHTML = desktopMenu.innerHTML;
+
+    // Modify each menu item
+    mobileMenuList.querySelectorAll("li").forEach((menuItem) => {
+        // Apply styles to list items
+        menuItem.classList.add(
+            "border-b",
+            "border-gray-50",
+            "pb-2",
+            "flex",
+            "justify-between",
+            "items-center",
+            "cursor-pointer",
+            "relative"
+        );
+
+        // Target child <li> elements inside dropdowns
+        const childLis = menuItem.querySelectorAll(".dropdown li");
+        childLis.forEach((childLi) => {
+            childLi.classList.add(
+                "py-1",
+                "border-b-[0.5px]",
+                "border-gray-500"
+            );
+        });
+
+        let dropdown = menuItem.querySelector(".dropdown");
+        if (dropdown) {
+            // Remove desktop-only styles
+            dropdown.classList.remove(
+                "absolute",
+                "left-0",
+                "mt-4",
+                "opacity-0",
+                "invisible",
+                "group-hover:opacity-100",
+                "group-hover:visible"
+            );
+
+            // Style dropdown for mobile and ensure it appears below li
+            dropdown.classList.add(
+                "hidden",
+                "w-full",
+                "bg-gray-800",
+                "mt-1",
+                "rounded",
+                "px-2",
+                "border",
+                "border-dark",
+                "max-h-48",
+                "overflow-y-auto"
+            );
+
+            // Create a toggle button inside the <li>
+            let toggleBtn = document.createElement("span");
+            toggleBtn.textContent = "+";
+            toggleBtn.classList.add("text-white", "text-lg", "font-bold", "ml-auto");
+
+            // Create a wrapper to place dropdown BELOW the li
+            let dropdownWrapper = document.createElement("div");
+            dropdownWrapper.classList.add("w-full"); // Ensures full width
+            dropdownWrapper.appendChild(dropdown);
+            menuItem.after(dropdownWrapper); // Places it BELOW li
+
+            menuItem.appendChild(toggleBtn);
+
+            // Click the entire li to toggle the dropdown
+            menuItem.addEventListener("click", function (e) {
+                // Prevent clicks inside dropdown from toggling it again
+                if (e.target.closest(".dropdown")) return;
+
+                dropdown.classList.toggle("hidden");
+                toggleBtn.textContent = dropdown.classList.contains("hidden") ? "+" : "−";
+
+                // Apply custom TailwindCSS classes to the dropdown when it's visible
+                if (!dropdown.classList.contains("hidden")) {
+                    dropdown.classList.add(
+                        "transition-all",
+                        "duration-300",
+                        "ease-in-out"
+                    );
+                    dropdown.classList.remove(
+                        "flex",
+                        "justify-between",
+                        "pb-2",
+                        "bg-gray-800",
+                        "text-white",
+                        "cursor-pointer"
+                    );
+                    dropdown.classList.add("border");
+                }
+            });
+        }
+    });
+
+    // Open mobile menu
+    openMenuBtn.addEventListener("click", function () {
+        mobileMenu.classList.remove("-translate-x-full");
+    });
+
+    // Close mobile menu
+    closeMenuBtn.addEventListener("click", function () {
+        mobileMenu.classList.add("-translate-x-full");
+    });
 });
